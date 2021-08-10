@@ -1,0 +1,17 @@
+<?php
+
+namespace {namespace};
+
+use Codememory\Components\Model\AbstractModel;
+
+/**
+ * Class {className}
+ *
+ * @package {namespace}
+ */
+class {className} extends AbstractModel
+{
+
+
+
+}

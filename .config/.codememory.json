@@ -1,0 +1,8 @@
+{
+  "model": {
+    "configName": "model",
+    "pathWithModels": "app/Models",
+    "namespaceModel": "App\\Models",
+    "modelSuffix": "Model"
+  }
+}

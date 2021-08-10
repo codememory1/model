@@ -1,0 +1,26 @@
+{
+    "name": "codememory/model",
+    "description": "model",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Danil",
+            "email": "kostynd1@gmail.com"
+        }
+    ],
+    "require": {
+        "codememory/config": "^1.1",
+        "codememory/console": "^1.0",
+        "codememory/fs": "^1.1",
+        "codememory/global-config": "^1.1",
+        "codememory/service-provider": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Codememory\\Components\\Model\\": ""
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
