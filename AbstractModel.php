@@ -60,16 +60,16 @@ abstract class AbstractModel
      *
      * @param string $name
      *
-     * @return ModelInterface
+     * @return AbstractModel
      * @throws Exceptions\ModelNotExistException
      * @throws ReflectionException
      */
-    protected function getModel(string $name): ModelInterface
+    protected function getModel(string $name): AbstractModel
     {
 
         $modelReflector = $this->model->getModelReflector($name);
 
-        /** @var ModelInterface $model */
+        /** @var AbstractModel $model */
         $model = $modelReflector->newInstanceArgs([
             $this->serviceProvider
         ]);
