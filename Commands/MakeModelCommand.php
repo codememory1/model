@@ -109,7 +109,7 @@ class MakeModelCommand extends Command
     private function getModelStub(FileInterface $filesystem): string
     {
 
-        return file_get_contents($filesystem->getRealPath('./Commands/Stubs/ModelStub.stub'));
+        return file_get_contents($filesystem->getRealPath('/vendor/codememory/model/Commands/Stubs/ModelStub.stub'));
 
     }
 
