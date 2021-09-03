@@ -9,8 +9,9 @@
         }
     ],
     "require": {
-        "codememory/config": "^1.1",
+        "codememory/config": "2.0",
         "codememory/console": "^1.0",
+        "codememory/event-dispatcher": "^1.0",
         "codememory/fs": "^1.1",
         "codememory/global-config": "^1.1",
         "codememory/service-provider": "^1.0"
