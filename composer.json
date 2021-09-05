@@ -14,7 +14,9 @@
         "codememory/event-dispatcher": "^1.0",
         "codememory/fs": "^1.1",
         "codememory/global-config": "^1.1",
-        "codememory/service-provider": "^1.0"
+        "codememory/profiling": "^2.2",
+        "codememory/service-provider": "^1.0",
+        "spatie/backtrace": "^1.2"
     },
     "autoload": {
         "psr-4": {

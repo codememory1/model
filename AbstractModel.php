@@ -7,10 +7,18 @@ use Codememory\Components\Event\EventDispatcher;
 use Codememory\Components\Event\Exceptions\EventExistException;
 use Codememory\Components\Event\Exceptions\EventNotExistException;
 use Codememory\Components\Event\Exceptions\EventNotImplementInterfaceException;
+use Codememory\Components\Event\Interfaces\EventDataInterface;
 use Codememory\Components\Event\Interfaces\EventDispatcherInterface;
 use Codememory\Components\Model\Interfaces\ModelInterface;
+use Codememory\Components\Profiling\Exceptions\BuilderNotCurrentSectionException;
+use Codememory\Components\Profiling\ReportCreators\EventsReportCreator;
+use Codememory\Components\Profiling\Resource;
+use Codememory\Components\Profiling\Sections\Builders\EventsBuilder;
+use Codememory\Components\Profiling\Sections\EventsSection;
 use Codememory\Container\ServiceProvider\Interfaces\ServiceProviderInterface;
 use ReflectionException;
+use Spatie\Backtrace\Backtrace;
+use Spatie\Backtrace\Frame;
 
 /**
  * Class AbstractModel
@@ -80,19 +88,23 @@ abstract class AbstractModel
      * @param string $eventNamespace
      * @param array  $parameters
      *
-     * @throws ReflectionException
+     * @throws BuilderNotCurrentSectionException
      * @throws EventExistException
      * @throws EventNotExistException
      * @throws EventNotImplementInterfaceException
+     * @throws ReflectionException
      */
     protected function dispatchEvent(string $eventNamespace, array $parameters = []): void
     {
 
+        $microTime = microtime(true);
         $this->eventDispatcher->addEvent($eventNamespace)->setParameters($parameters);
 
         $event = $this->eventDispatcher->getEvent($eventNamespace);
 
         $this->dispatcher->dispatch($event);
+
+        $this->eventProfiling($event, $microTime);
 
     }
 
@@ -118,6 +130,38 @@ abstract class AbstractModel
         ]);
 
         return $model;
+
+    }
+
+    /**
+     * @param EventDataInterface $event
+     * @param float              $microTime
+     *
+     * @return void
+     * @throws BuilderNotCurrentSectionException
+     */
+    private function eventProfiling(EventDataInterface $event, float $microTime): void
+    {
+
+        $eventsReportCreator = new EventsReportCreator(null, new EventsSection(new Resource()));
+        $eventsBuilder = new EventsBuilder();
+
+        /** @var Frame $demanded */
+        $demanded = Backtrace::create()
+            ->startingFromFrame(function (Frame $frame) {
+                return $frame->class === static::class;
+            })
+            ->frames()[0];
+
+        $eventsBuilder
+            ->setEvent($event->getNamespace())
+            ->setListeners(array_map(function (object|string $listener) {
+                return is_callable($listener) ? 'callback' : $listener::class;
+            }, $event->getListeners()))
+            ->setDemanded($demanded->class, $demanded->method)
+            ->setLeadTime(round((microtime(true) - $microTime) * 1000));
+
+        $eventsReportCreator->create($eventsBuilder);
 
     }
 
